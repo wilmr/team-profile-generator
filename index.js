@@ -2,11 +2,13 @@ const inquirer = require('inquirer');
 const path = require('path');
 const fs = require('fs');
 
-const Manager = require('./lib/Manager.js');
-const Engineer = require('./lib/Engineer.js');
+const Manager = require('./lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
 
-const OUTPUT_DIR = path.resolve(__dirname, 'output');
+const OUTPUT_DIR = path.resolve(__dirname, 'dist');
 const outputPath = path.join(OUTPUT_DIR, 'teamProfile.html');
+const createTeamHTML = require('./src/page-template');
 
 teamProfileArr = [];
 
