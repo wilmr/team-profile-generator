@@ -1,12 +1,51 @@
 const inquirer = require('inquirer');
 const path = require('path');
+const fs = require('fs');
 
 const Manager = require('./lib/Manager.js');
 const Engineer = require('./lib/Engineer.js');
 
 const OUTPUT_DIR = path.resolve(__dirname, 'output');
+const outputPath = path.join(OUTPUT_DIR, 'teamProfile.html');
 
 teamProfileArr = [];
+
+const start = () => {
+	addManager();
+};
+
+function createTeam() {
+	inquirer
+		.prompt([
+			{
+				type: 'list',
+				message: 'Choose the type of Employee you wish to add.',
+				name: 'employeeRole',
+				choices: [
+					'Manager',
+					`Engineer`,
+					'Intern',
+					'No more team members are needed.',
+				],
+			},
+		])
+		.then(function (response) {
+			switch (response.employeeRole) {
+				case 'Manager':
+					addManager();
+					break;
+				case 'Engineer':
+					addEngineer();
+					break;
+				case 'Intern':
+					addIntern();
+					break;
+
+				default:
+					htmlBuilder();
+			}
+		});
+}
 
 function addManager() {
 	inquirer
@@ -86,35 +125,49 @@ function addEngineer() {
 		});
 }
 
-function createTeam() {
+function addIntern() {
 	inquirer
 		.prompt([
 			{
-				type: 'list',
-				message: 'Choose the type of Employee you wish to add.',
-				name: 'employeeRole',
-				choices: [
-					'Manager',
-					`Engineer`,
-					'Intern',
-					'No more team members are needed.',
-				],
+				type: 'input',
+				name: 'internName',
+				message: "Enter the intern's name.",
+			},
+
+			{
+				type: 'input',
+				name: 'internId',
+				message: "Enter the intern's employee ID number.",
+			},
+
+			{
+				type: 'input',
+				name: 'internEmail',
+				message: "Enter the intern's email address.",
+			},
+
+			{
+				type: 'input',
+				name: 'internSchool',
+				message: "Enter the intern's school",
 			},
 		])
-		.then(function (response) {
-			switch (response.employeeRole) {
-				case 'Manager':
-					addManager();
-					break;
-				case 'Engineer':
-					addEngineer();
-					break;
-				case 'Intern':
-					addIntern();
-					break;
-
-				default:
-					htmlBuilder();
-			}
+		.then((response) => {
+			const intern = new Intern(
+				response.internName,
+				response.internId,
+				response.internEmail,
+				response.internSchool
+			);
+			teamProfileArr.push(intern);
+			createTeam();
 		});
 }
+
+function htmlBuilder() {
+	console.log('Your Team Profile has been generated!');
+
+	fs.writeFileSync(outputPath, generateTeam(teamProfileArr), 'UTF-8');
+}
+
+start();
