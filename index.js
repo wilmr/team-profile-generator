@@ -167,7 +167,7 @@ function addIntern() {
 function htmlBuilder() {
 	console.log('Your Team Profile has been generated!');
 
-	fs.writeFileSync(outputPath, generateTeam(teamProfileArr), 'UTF-8');
+	fs.writeFileSync(outputPath, createTeamHTML(teamProfileArr), 'UTF-8');
 }
 
 start();
